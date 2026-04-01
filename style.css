@@ -1,0 +1,23 @@
+body {
+  font-family: Arial;
+  text-align: center;
+}
+
+#loader {
+  display: none;
+  margin: 10px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin: 10px auto;
+  width: 90%;
+  border-radius: 10px;
+}
+
+@media (min-width: 768px) {
+  .card {
+    width: 40%;
+  }
+}
