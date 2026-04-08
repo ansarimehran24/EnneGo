@@ -1,6 +1,26 @@
 body {
   font-family: Arial;
   text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: #333;
+  color: #fff;
+}
+
+.controls {
+  margin: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.controls input, .controls select, .controls button {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 #loader {
@@ -14,6 +34,19 @@ body {
   margin: 10px auto;
   width: 90%;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+}
+
+body.dark .card {
+  border-color: #555;
+  background-color: #444;
+}
+
+.favorite {
+  color: red;
 }
 
 @media (min-width: 768px) {

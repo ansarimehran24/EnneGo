@@ -11,8 +11,26 @@
 <body>
     <h1>EnneGo Travel Planner</h1>
 
-    <input type="text" id="searchInput" placeholder="Enter your trip idea">
-    <button id="searchBtn">Search</button>
+    <div class="controls">
+        <input type="text" id="searchInput" placeholder="Search destinations">
+        <button id="searchBtn">Search</button>
+        
+        <select id="filterType">
+            <option value="">All Types</option>
+            <option value="beach">Beach</option>
+            <option value="mountain">Mountain</option>
+            <option value="city">City</option>
+            <option value="rainforest">Rainforest</option>
+        </select>
+        
+        <select id="sortBy">
+            <option value="name">Sort by Name</option>
+            <option value="temp-asc">Temp Low to High</option>
+            <option value="temp-desc">Temp High to Low</option>
+        </select>
+        
+        <button id="darkModeToggle">Toggle Dark Mode</button>
+    </div>
 
     <div id="loader">Loading...</div>
 
