@@ -28,14 +28,18 @@ Planning a trip involves multiple factors like weather, preferences, and timing.
 
 ---
 
-### 🤖 Groq API (AI Processing)
+### 🤖 Hugging Face Inference API (AI Processing)
 
-* API Key: (It's a personal api key cannot disclose here at public)
-* Used for:
+* **API Endpoint:** `https://router.huggingface.co/v1/chat/completions`
+* **Models Available:**
+  * `Qwen/Qwen3-1.7B:featherless-ai` — Fast AI responses
+  * `meta-llama/Llama-3.2-1B-Instruct:novita` — Balanced AI responses
+* **Used for:**
 
-  * Understanding user input (NLP)
-  * Suggesting destinations
-  * Intelligent filtering and ranking
+  * Understanding user input (NLP) via natural language travel queries
+  * Suggesting & scoring destinations from the built-in database
+  * Conversational AI travel assistant (Chat tab)
+  * Intelligent filtering and ranking with suitability scores
 
 ---
 
@@ -50,7 +54,7 @@ Planning a trip involves multiple factors like weather, preferences, and timing.
 
 ### 📍 AI-Based Destination Suggestions
 
-* Uses Groq API to analyze user intent
+* Uses Hugging Face Inference API to analyze user intent
 * Returns a list of relevant travel destinations
 
 ---
@@ -105,11 +109,25 @@ Users can sort results based on:
 
 ## 🛠️ Technologies Used
 
-* **Frontend:** HTML, CSS, JavaScript
-* **Backend:** JavaScript (Node.js)
-* **API Integration:** Weather API + Groq API
+* **Frontend:** HTML, CSS, Vanilla JavaScript
+* **Core Logic:** Array Higher-Order Functions (map, filter, sort, forEach) for all data manipulation
+* **API Integration:** Weatherstack API + Hugging Face API + Wikipedia Image API
 * **Version Control:** Git & GitHub
 
+---
+
+## 🎯 Milestone Checklist Completed
+
+* ✅ **Milestone 1:** Project setup, UI planning, README created.
+* ✅ **Milestone 2:** Public APIs integrated using `fetch`, loading states handled, layout is responsive.
+* ✅ **Milestone 3:** Core features added!
+  * **Searching, Filtering & Sorting** implemented natively using Array HOFs (No `for`/`while` loops!)
+  * **Button Interactions:** View live weather modals and ❤️ Favorite buttons.
+  * **Dark Mode/Light Mode:** Full CSS variable toggle implemented.
+* ✅ **Bonus Features Implemented!**
+  * **Debouncing:** Applied to the text Search and Temperature inputs to minimize API calls.
+  * **Local Storage:** Favorites are persistently saved across page reloads.
+  
 ---
 
 ## ⚙️ Setup Instructions
@@ -126,35 +144,18 @@ Users can sort results based on:
    cd EnneGo
    ```
 
-3. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-4. Run the application:
-
-   ```bash
-   npm start
-   ```
-
-5. Open in browser:
-
-   ```
-   http://localhost:3000
-   ```
+3. Open `index.html` in your browser. (No node.js or npm required!)
 
 ---
 
 ## 📂 Project Structure
 
 ```
-ennego/
-│── src/
-│── api/
-│── components/
+EnneGo/
+│── index.html
+│── style.css
+│── script.js
 │── README.md
-│── package.json
 ```
 
 ---

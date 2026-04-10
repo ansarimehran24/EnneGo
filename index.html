@@ -1,42 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EnneGo</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EnneGo – AI Travel Planner</title>
+  <meta name="description" content="EnneGo is an AI-powered travel planner that helps you discover the best travel destinations using real-time weather data and intelligent recommendations." />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-    <h1>EnneGo Travel Planner</h1>
 
-    <div class="controls">
-        <input type="text" id="searchInput" placeholder="Search destinations">
-        <button id="searchBtn">Search</button>
-        
-        <select id="filterType">
+  <!-- Animated Background -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">✈️</span>
+        <span class="logo-text">EnneGo</span>
+        <span class="logo-tag">AI Travel</span>
+      </div>
+      <div class="header-right">
+        <nav class="nav-tabs">
+          <button class="nav-tab active" id="tab-explore" onclick="switchTab('explore')">🗺️ Explore</button>
+          <button class="nav-tab" id="tab-favorites" onclick="switchTab('favorites')">❤️ Favorites</button>
+          <button class="nav-tab" id="tab-chat" onclick="switchTab('chat')">🤖 AI Chat</button>
+        </nav>
+        <button id="darkModeToggle" class="dark-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== EXPLORE TAB ===== -->
+  <main id="page-explore" class="page active">
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Discover Your <span class="gradient-text">Perfect Trip</span></h1>
+        <p class="hero-subtitle">Describe your dream destination in natural language and let AI + real-time weather data guide you.</p>
+
+        <div class="search-bar">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍  e.g. peaceful hill station with cool weather..."
+            autocomplete="off"
+          />
+          <button id="searchBtn" onclick="handleSearch()">
+            <span class="btn-text">Search</span>
+            <span class="btn-icon">→</span>
+          </button>
+        </div>
+
+        <div class="ai-model-selector">
+          <label for="aiModel">AI Model:</label>
+          <select id="aiModel">
+            <option value="Qwen/Qwen3-1.7B:featherless-ai">Qwen3-1.7B (Fast)</option>
+            <option value="meta-llama/Llama-3.2-1B-Instruct:novita">Llama-3.2-1B (Balanced)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters & Sort -->
+    <section class="controls-bar" id="controlsBar">
+      <div class="controls-inner">
+        <div class="control-group">
+          <label for="filterType">Destination Type</label>
+          <select id="filterType" onchange="updateDisplay()">
             <option value="">All Types</option>
-            <option value="beach">Beach</option>
-            <option value="mountain">Mountain</option>
-            <option value="city">City</option>
-            <option value="rainforest">Rainforest</option>
-        </select>
-        
-        <select id="sortBy">
-            <option value="name">Sort by Name</option>
-            <option value="temp-asc">Temp Low to High</option>
-            <option value="temp-desc">Temp High to Low</option>
-        </select>
-        
-        <button id="darkModeToggle">Toggle Dark Mode</button>
+            <option value="mountain">🏔️ Mountain</option>
+            <option value="beach">🏝️ Beach</option>
+            <option value="rainforest">🌿 Rainforest</option>
+            <option value="city">🏙️ City</option>
+            <option value="desert">🏜️ Desert</option>
+            <option value="heritage">🏛️ Heritage</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="filterWeather">Weather</label>
+          <select id="filterWeather" onchange="updateDisplay()">
+            <option value="">Any Weather</option>
+            <option value="Sunny">☀️ Sunny</option>
+            <option value="Cloudy">☁️ Cloudy</option>
+            <option value="Rainy">🌧️ Rainy</option>
+            <option value="Snowy">❄️ Snowy</option>
+            <option value="Cold">🥶 Cold</option>
+            <option value="Hot">🔥 Hot</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label for="tempMin">Min Temp (°C)</label>
+          <input type="number" id="tempMin" placeholder="e.g. 10" onchange="updateDisplay()" />
+        </div>
+        <div class="control-group">
+          <label for="tempMax">Max Temp (°C)</label>
+          <input type="number" id="tempMax" placeholder="e.g. 35" onchange="updateDisplay()" />
+        </div>
+        <div class="control-group">
+          <label for="sortBy">Sort By</label>
+          <select id="sortBy" onchange="updateDisplay()">
+            <option value="score">⭐ AI Score</option>
+            <option value="name">🔤 Name (A–Z)</option>
+            <option value="temp-asc">🌡️ Temp Low→High</option>
+            <option value="temp-desc">🌡️ Temp High→Low</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Loader -->
+    <div id="loader" class="loader hidden">
+      <div class="loader-spinner"></div>
+      <p class="loader-text" id="loaderText">Searching with AI...</p>
     </div>
 
-    <div id="loader">Loading...</div>
+    <!-- AI Summary Banner -->
+    <div id="aiSummary" class="ai-summary hidden">
+      <span class="ai-summary-icon">🤖</span>
+      <p id="aiSummaryText"></p>
+    </div>
 
-    <div id="results"></div>
+    <!-- Results Grid -->
+    <section class="results-section">
+      <div class="results-header" id="resultsHeader">
+        <h2 id="resultsTitle">All Destinations</h2>
+        <span id="resultsCount" class="results-count"></span>
+      </div>
+      <div id="results" class="results-grid"></div>
+      <div id="noResults" class="no-results hidden">
+        <p>😕 No destinations found matching your criteria.</p>
+        <button onclick="resetFilters()">Reset Filters</button>
+      </div>
+    </section>
+  </main>
 
-    <script src="script.js"></script>
+  <!-- ===== FAVORITES TAB ===== -->
+  <main id="page-favorites" class="page hidden">
+    <section class="hero hero-small">
+      <div class="hero-content">
+        <h1 class="hero-title">Your <span class="gradient-text">Favorites</span></h1>
+        <p class="hero-subtitle">Your saved dream destinations, all in one place.</p>
+      </div>
+    </section>
+    <section class="results-section">
+      <div id="favResults" class="results-grid"></div>
+      <div id="noFavs" class="no-results hidden">
+        <p>💔 No favorites saved yet. Explore destinations and heart the ones you love!</p>
+        <button onclick="switchTab('explore')">Explore Now</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== AI CHAT TAB ===== -->
+  <main id="page-chat" class="page hidden">
+    <section class="hero hero-small">
+      <div class="hero-content">
+        <h1 class="hero-title">Chat with <span class="gradient-text">AI Travel Guide</span></h1>
+        <p class="hero-subtitle">Ask anything about travel — destinations, tips, packing, visa info and more.</p>
+        <div class="ai-model-selector">
+          <label for="chatAiModel">AI Model:</label>
+          <select id="chatAiModel">
+            <option value="Qwen/Qwen3-1.7B:featherless-ai">Qwen3-1.7B (Fast)</option>
+            <option value="meta-llama/Llama-3.2-1B-Instruct:novita">Llama-3.2-1B (Balanced)</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div class="chat-container">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg assistant">
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-bubble">
+            Hi! I'm your AI travel guide powered by Hugging Face. Ask me anything about travel destinations, weather conditions, what to pack, or where to go for your next adventure! ✈️🌍
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <input type="text" id="chatInput" placeholder="Ask about travel destinations..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+        <button id="chatSendBtn" onclick="sendChatMessage()">
+          <span>Send</span> ✈️
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Weather Modal -->
+  <div id="weatherModal" class="modal-overlay hidden" onclick="closeWeatherModal(event)">
+    <div class="modal-card" id="weatherModalCard">
+      <button class="modal-close" onclick="closeWeatherModal(null, true)">✕</button>
+      <div id="weatherModalContent"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
-
 </html>
