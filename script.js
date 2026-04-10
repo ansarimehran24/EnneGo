@@ -5,7 +5,6 @@
    ============================================================ */
 
 // ── API Configuration ──────────────────────────────────────
-const HF_TOKEN   = "YOUR_HUGGINGFACE_TOKEN"; // ⚠️ Replace with your actual Hugging Face token before running locally
 const HF_API_URL = "https://router.huggingface.co/v1/chat/completions";
 
 const WEATHER_API_KEY  = "ad3bf76b14350b6d193245448fa05c47";
@@ -100,10 +99,17 @@ const resultsCount  = document.getElementById("resultsCount");
 
 // ── HuggingFace API Query ──────────────────────────────────
 async function queryHF(messages, modelOverride) {
+  const token = localStorage.getItem("hf_token");
+  if (!token) {
+    if(isSearching) showLoader("Missing API Key..."); // Graceful UI update
+    openSettingsModal();
+    throw new Error("Missing Hugging Face Token. Please configure in settings.");
+  }
+
   const model = modelOverride || document.getElementById("aiModel").value;
   const response = await fetch(HF_API_URL, {
     headers: {
-      "Authorization": `Bearer ${HF_TOKEN}`,
+      "Authorization": `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     method: "POST",
@@ -860,6 +866,34 @@ function debounce(func, delay) {
 }
 
 const debouncedSearch = debounce(handleSearch, 600);
+
+// ── Settings Modal ──────────────────────────────────────────
+function openSettingsModal() {
+  document.getElementById("settingsModal").classList.remove("hidden");
+  const storedToken = localStorage.getItem("hf_token");
+  if (storedToken) {
+    document.getElementById("hfTokenInput").value = storedToken;
+  }
+}
+
+function closeSettingsModal(event, force=false) {
+  if (force || event.target.id === "settingsModal") {
+    document.getElementById("settingsModal").classList.add("hidden");
+  }
+}
+
+function saveSettings() {
+  const token = document.getElementById("hfTokenInput").value.trim();
+  if (token) {
+    localStorage.setItem("hf_token", token);
+    closeSettingsModal(null, true);
+    // Optionally trigger a brief visual success marker
+    searchBtn.textContent = "Saved ✓";
+    setTimeout(() => { searchBtn.innerHTML = '<span class="btn-text">Search</span><span class="btn-icon">→</span>'; }, 2000);
+  } else {
+    alert("Please enter a valid token.");
+  }
+}
 
 // ── Event Listeners ────────────────────────────────────────
 searchBtn.addEventListener("click", handleSearch);

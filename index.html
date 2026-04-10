@@ -32,6 +32,7 @@
           <button class="nav-tab" id="tab-chat" onclick="switchTab('chat')">🤖 AI Chat</button>
         </nav>
         <button id="darkModeToggle" class="dark-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">🌙</button>
+        <button id="settingsBtn" class="dark-toggle" onclick="openSettingsModal()" title="Settings">⚙️</button>
       </div>
     </div>
   </header>
@@ -197,6 +198,23 @@
     <div class="modal-card" id="weatherModalCard">
       <button class="modal-close" onclick="closeWeatherModal(null, true)">✕</button>
       <div id="weatherModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settingsModal" class="modal-overlay hidden" onclick="closeSettingsModal(event)">
+    <div class="modal-card" id="settingsModalCard">
+      <button class="modal-close" onclick="closeSettingsModal(null, true)">✕</button>
+      <h2 class="weather-modal-title" style="margin-bottom:15px; font-size:20px;">⚙️ Configuration</h2>
+      <p class="weather-modal-location">Enter your API keys to enable features. They are saved securely in your browser's local storage.</p>
+      
+      <div style="margin-bottom: 20px;">
+        <label for="hfTokenInput" style="display:block; font-weight:bold; margin-bottom:5px; font-size:14px;">Hugging Face Token</label>
+        <input type="password" id="hfTokenInput" placeholder="hf_..." style="width:100%; padding:10px; border:1px solid var(--border-color); border-radius:4px; background:var(--bg-color); color:var(--text-color);" />
+        <p style="font-size:12px; color:var(--secondary-color); margin-top:5px;">Required for AI Search and Chat features.</p>
+      </div>
+
+      <button onclick="saveSettings()" style="width:100%; padding:12px; background-color:var(--primary-color); color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">Save Settings</button>
     </div>
   </div>
 
